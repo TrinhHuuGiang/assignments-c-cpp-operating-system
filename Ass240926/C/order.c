@@ -47,7 +47,7 @@ int main(int argc, const char** argv)
     printf("Input your order, separated by ' ' and limited by 100 character.\n");
     printf("Let's input your order:\n->");
     fgets(order_str,MAX_ORDER,stdin);
-
+    
     /*check syntax: !number, out of range*/
     for(int i = 0;i<MAX_ORDER;i++)
     {
@@ -95,7 +95,7 @@ int main(int argc, const char** argv)
         int reversed_sum = 0;
         //check until before MAX_ORDER = \0 or get \n
         //write order reverse
-        while(order_str[i] != '\n' && order_str[i] != '\0')
+        while(order_str[i] != '\n' && order_str[i] != '\0'&&order_str[i]!=' ')
         {
             sum += (order_str[i] - ZERO_OFFSET) * pow(10,mul);
             mul++;
