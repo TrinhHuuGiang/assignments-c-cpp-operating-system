@@ -27,18 +27,23 @@ int main(int argc, const char** argv)
     //else if user input something, print ignore $0
     for(int i = 1; i < argc; i++)
     {
-        cout << setw(2) << i << ". " << argv[i] << '\n';
+        cout << setw(4) << i << ". " << argv[i] << '\n';
     }
     int number;
-     while (true) {
-        cout << "Nhap stt trong menu: ";
+    while (true) {
+        cout << "Enter the number in the menu to order."<<endl;
+        cout << "(Enter 0 if you don't want)\n->";
         cin >> number;
 
+        if(cin.fail() || number == 0)
+        {
+            return 0;//user don't want to delete anything
+        }
         // Check if the number is valid
-        if (cin.fail() || number < 1 || number >= argc) {
+        else if (cin.fail() || number < 1 || number >= argc) {
             cin.clear(); // Reset cin status
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the remaining characters
-            cout << "Nhap lai so hop le tu 1 - " << argc - 1 << ".\n";
+            cout << "Re-enter valid number 1 - " << argc - 1 << ".\n->";
         } else {
             break; // Exit the loop when entered correctly
         }
