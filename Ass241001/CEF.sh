@@ -20,27 +20,28 @@ fi
 
 #then check the path of 'order' program exist
 #then set execute permission
-if [ ! -f "${df_prg1}/${prg1}" ] || [ ! -f "${df_prg2}/${prg1}" ]
+if [ ! -f "${df_prg1}/${prg1}" ] && [ ! -f "${df_prg2}/${prg1}" ]
 then
 	echo "Program [${prg1}] not available"
+	echo "Path 1: ${df_prg1}/${prg1}"
+    echo "Path 2: ${df_prg2}/${prg1}"
 	exit 2
-else
-	#check if user build program in "."
-	if [ -f "${df_prg1}/${prg1}" ]
-	then
-		df_prg="$df_prg1"
-	fi
-	#then check execute permisstion
-	if [ ! -x "${df_prg}/${prg1}" ]
-	then
-        	echo "Setting permissions for [$prg1]"
-        	chmod +x "${df_prg}/${prg1}"
-        fi
+fi
+#check if user build program in "."
+#so priority run in "."
+if [ -f "${df_prg1}/${prg1}" ]
+then
+	df_prg="$df_prg1"
+fi
+#then check execute permisstion
+if [ ! -x "${df_prg}/${prg1}" ]
+then
+	echo "Setting permissions for [$prg1]"
+	chmod +x "${df_prg}/${prg1}"
 fi
 
 # check folder and file in path and save an array
 empty_file=()
-
 # Function find empty file
 function save_Empty_file {
     # check folder and fine in current path
@@ -72,8 +73,10 @@ save_Empty_file "$input_dir"
 # Run a loop until user want exit
 while true
 do
+echo "${df_prg}/${prg1}" "${empty_file[@]}"
 	# Now provide link from array empty file for 'order' program
 	result=$("${df_prg}/${prg1}" "${empty_file[@]}")
+	echo standhere
 	#if user want delete, input >0
 	if [[ "$result" > "0" ]]
 	then

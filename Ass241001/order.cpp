@@ -21,7 +21,7 @@ int main(int argc, const char** argv)
     */
     if(check)
     {
-        cout << "The user input nothing\n";
+        cout << "File input nothing\n";
         return -1;
     }
     //else if user input something, print ignore $0
@@ -31,7 +31,7 @@ int main(int argc, const char** argv)
     }
     int number;
     while (true) {
-        cout << "Enter the number in the menu to order."<<endl;
+        cout << "Enter the number in the menu to delete."<<endl;
         cout << "(Enter 0 if you don't want)\n->";
         cin >> number;
 
@@ -43,7 +43,7 @@ int main(int argc, const char** argv)
         else if (cin.fail() || number < 1 || number >= argc) {
             cin.clear(); // Reset cin status
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the remaining characters
-            cout << "Re-enter valid number 1 - " << argc - 1 << ".\n->";
+            cout << "Re-enter valid number 1 - " << argc - 1 << ".\n";
         } else {
             break; // Exit the loop when entered correctly
         }
