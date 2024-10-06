@@ -21,10 +21,11 @@ int main(int argc, const char** argv)
     */
     if(check)
     {
-        cout << "File input nothing\n";
+        cout << "\nFile input nothing\n";
         return -1;
     }
     //else if user input something, print ignore $0
+    cout << "\nList empty file found:\n";
     for(int i = 1; i < argc; i++)
     {
         cout << setw(4) << i << ". " << argv[i] << '\n';
@@ -43,12 +44,12 @@ int main(int argc, const char** argv)
         else if (cin.fail() || number < 1 || number >= argc) {
             cin.clear(); // Reset cin status
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the remaining characters
-            cout << "Re-enter valid number 1 - " << argc - 1 << ".\n";
+            cout << "[WARN] Re-enter valid number 1 - " << argc - 1 << ".\n";
         } else {
             break; // Exit the loop when entered correctly
         }
     }
-    cout << argv[number] << endl;
+    cout <<"Your order delete file: "<< argv[number] <<"\n"<< endl;
 
     return number; // anything ok
 

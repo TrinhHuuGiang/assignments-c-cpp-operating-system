@@ -1,4 +1,5 @@
 #!/bin/bash
+#debug: set -x
 #user input path
 input_dir="${1}"
 
@@ -73,10 +74,19 @@ save_Empty_file "$input_dir"
 # Run a loop until user want exit
 while true
 do
-echo "${df_prg}/${prg1}" "${empty_file[@]}"
+	echo "-----------------------------"
 	# Now provide link from array empty file for 'order' program
-	result=$("${df_prg}/${prg1}" "${empty_file[@]}")
-	echo standhere
+	command="${df_prg}/${prg1}"
+	for link in "${empty_file[@]}"
+	do
+		#link list empty file to program
+		command="$command \"${link}\""
+	done
+	# Now run 'order'
+	${command}
+	# then get return code
+	result=$?
+	echo $result
 	#if user want delete, input >0
 	if [[ "$result" > "0" ]]
 	then
@@ -95,15 +105,15 @@ echo "${df_prg}/${prg1}" "${empty_file[@]}"
 	fi
 	
 	#continue ?
-	choice="y"
-	while [[ "$choice" != "n" && "$choice" != "N" ]]
+	choice="n"
+	while [[ "$choice" != "y" && "$choice" != "Y" ]]
 	do
 		read -p "Do you want to continue deleting? (y/n): " choice
 		if [[ "$choice" == "n" || "$choice" == "N" ]]
 		then
 			echo "Exit."
         		exit 0
-        	fi
+        fi
         done
 done
 
