@@ -32,7 +32,7 @@ int main(int argc, const char** argv)
     }
     int number;
     while (true) {
-        cout << "Enter the number in the menu to delete."<<endl;
+        cout << "\nEnter the number in the menu to delete."<<endl;
         cout << "(Enter 0 if you don't want)\n->";
         cin >> number;
 

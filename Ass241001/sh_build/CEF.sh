@@ -83,11 +83,13 @@ do
 		command="$command \"${link}\""
 	done
 	# Now run 'order'
-	${command}
+	# echo $command
+	# using eval fo execute because ${command} can't detect ""
+	eval ${command}
 	# then get return code
 	result=$?
-	echo $result
-	#if user want delete, input >0
+	# echo $result
+	# if user want delete, input >0
 	if [[ "$result" > "0" ]]
 	then
 		# Delete link at array[result-1]
@@ -99,8 +101,10 @@ do
 		then
 			rm "$file_to_delete"  # delete file
 			echo "Deleted: $file_to_delete"
-			# update array
-			empty_file=("${empty_file[@]/$file_to_delete}")  # remove link then update
+			# update array using unset
+            unset 'empty_file[result-1]'  # remove link from array
+            # update array to remove ""
+            empty_file=("${empty_file[@]}")
 		fi
 	fi
 	
