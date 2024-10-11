@@ -9,12 +9,13 @@ Viết chương trình C với yêu cầu sau:
 ********************************************************************************/
 #include <stdio.h>
 
-#include <fcntl.h>            //For O_* constants,  shm_open
-#include <unistd.h>         // For ftruncate()
- #include <sys/mman.h> // For mmap
+#include <fcntl.h>              //For O_* constants,  shm_open(add Realtime extensionlib)
+#include <unistd.h>           // For ftruncate(),  fork
+#include <sys/mman.h>    // For mmap, shm_unlink(add Realtime extensionlib)
 
-#include <sys/types.h>         //pid_t
-#include <unistd.h>             //fork
+#include <sys/types.h>     //pid_t
+
+#include <sys/wait.h>       //wait
 
 #define SHM_NAME "my-shm"   //share memory name
 #define SHM_SIZE   (1)              //1*sizeof(smem)
@@ -34,6 +35,8 @@ int init_ShareMemory(char* name, int size, int*  sid);
 /*  init 'ready = 0' */
 int init_smemToShm(int sid);
 
+/* user modify x,y */
+void input_xy(smem* p);
 /********************************************************************************
 * Code
 ********************************************************************************/
@@ -42,7 +45,6 @@ int main()
     //variable
     int shmid;                  //save id of share memory
     pid_t childPID = -1;   //check parent or child or failed init proc
-    smem*  shmem;
 
     //init sharing mem
     if(init_ShareMemory(SHM_NAME,SHM_SIZE, &shmid))
@@ -51,7 +53,7 @@ int main()
     }
 
     //init ready = 0
-    if(init_smemToShm(shmid);)
+    if(init_smemToShm(shmid))
     {
         return 2;
     }
@@ -65,11 +67,34 @@ int main()
     }
     else if(childPID == 0)//child do
     {
-
+        smem* p = (smem*)mmap(NULL,sizeof(smem),PROT_WRITE,MAP_SHARED,shmid,0);
+        while(p->ready == 0)
+        {
+            continue;//polling untill ready == 1
+        }
+        //while ready == 1 -> z = x + y -> ready = 0
+        p->z = p->x +p->y;
+        //ready = 0
+        p->ready = 0;
     }
     else//parent do
     {
-
+        smem* p = (smem*)mmap(NULL,sizeof(smem),PROT_WRITE,MAP_SHARED,shmid,0);
+        //get x,y
+        input_xy(p);
+        //then set ready = 1
+        p->ready=1;
+        //polling to wait child calculating
+        while(p->ready == 1)
+        {
+            continue;
+        }
+        //print z
+        fprintf(stdout,"\n[z =  %d]",p->z);
+        //wait child end
+        wait(NULL);
+        //then end share mem
+        shm_unlink(SHM_NAME);
     }
 
     // exit ok
@@ -109,4 +134,12 @@ int init_smemToShm(int sid)
     //init ready =0
     p->ready=0;
     return 0;
+}
+
+/* user modify x,y */
+void input_xy(smem* p)
+{
+    fprintf(stdout,"\nIn put x, y: ");
+    fscanf(stdin,"%d%d", &(p->x), &(p->y)); //input x,y
+    fscanf(stdin,"%*[^\n]%*c"); //get \n out of buffer
 }

@@ -3,4 +3,5 @@
 #create folder build while not exist
 mkdir -p build
 
-gcc -o ./build/sharemem sharemem.c
+#build include Real-time extensions library -lrt
+gcc -o ./build/sharemem sharemem.c -lrt
