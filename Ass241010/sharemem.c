@@ -7,21 +7,51 @@ Viết chương trình C với yêu cầu sau:
 /********************************************************************************
 * Definitions
 ********************************************************************************/
+#include <stdio.h>
 
-/********************************************************************************
-* Variable
-********************************************************************************/
+typedef struct t_Share_Memory
+{
+    int x,y,z;          //x,y get from keyboard|z=x+y
+    int ready;        //init == 0
+} smem;
 
 /********************************************************************************
 * Prototype
 ********************************************************************************/
+/* Parent proc init 'ready==0'*/
+void init_Memory(smem *mem);
+/* Parent proc get value for x,y*/
+void input_xy(smem *mem);
+
 
 /********************************************************************************
 * Code
 ********************************************************************************/
 int main()
 {
+    smem shared_mem;
+    //init mem
+    init_Memory(&shared_mem);
 
-    
+    //get x, y
+    input_xy(&shared_mem);
+
+    fprintf(stdout,"\nx=[%d],y=[%d]",shared_mem.x,shared_mem.y);
+
+    // exit ok
     return 0;
+}
+
+void init_Memory(smem *mem)
+{
+    mem->z=0;
+    //anything ok
+    return;
+}
+
+void input_xy(smem *mem)
+{
+    fprintf(stdout,"\nInput x,y: ");
+    fscanf(stdin,"%d%d",&mem->x,&mem->y);
+    fscanf(stdin,"%*[^\n]%*c");
 }
