@@ -11,6 +11,7 @@
     - Được sử dụng để ánh xạ vùng bộ nhớ chia sẻ
         vào không gian địa chỉ của tiến trình
         để có thể truy cập và ghi dữ liệu vào đó.
+    - https://man7.org/linux/man-pages/man3/mmap.3p.html
 
 4. [   shm_unlink()   ]
     - Khi không còn cần sử dụng bộ nhớ chia sẻ nữa

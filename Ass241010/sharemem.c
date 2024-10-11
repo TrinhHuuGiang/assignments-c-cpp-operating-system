@@ -8,9 +8,10 @@ Viết chương trình C với yêu cầu sau:
 * Definitions
 ********************************************************************************/
 #include <stdio.h>
+
 #include <fcntl.h>            //For O_* constants,  shm_open
 #include <unistd.h>         // For ftruncate()
-
+ #include <sys/mman.h> // For mmap
 
 #include <sys/types.h>         //pid_t
 #include <unistd.h>             //fork
@@ -27,9 +28,11 @@ typedef struct t_Share_Memory
 /********************************************************************************
 * Prototype
 ********************************************************************************/
-/* Parent proc init 'ready==0'*/
+/* init memmory to save a struct t_Share_Memory */
 int init_ShareMemory(char* name, int size, int*  sid);
 
+/*  init 'ready = 0' */
+int init_smemToShm(int sid);
 
 /********************************************************************************
 * Code
@@ -47,18 +50,33 @@ int main()
         return 1;
     }
 
+    //init ready = 0
+    if(init_smemToShm(shmid);)
+    {
+        return 2;
+    }
+
     //init child
     childPID = fork();
+    if(childPID == -1)//init failed, parent do
+    {
+        fprintf(stderr,"[ERR] Failed init child process");
+        return 3;
+    }
+    else if(childPID == 0)//child do
+    {
 
+    }
+    else//parent do
+    {
 
-
-
-
+    }
 
     // exit ok
     return 0;
 }
 
+/* init memory, size */
 int init_ShareMemory(char* name, int size, int*  sid)
 {
     int code;
@@ -77,5 +95,18 @@ int init_ShareMemory(char* name, int size, int*  sid)
         return 2;
     }
     //anything ok
+    return 0;
+}
+
+/* add a struct smem to Share memory*/
+int init_smemToShm(int sid)
+{
+    smem* p = (smem*)mmap(NULL,sizeof(smem),PROT_WRITE,MAP_SHARED,sid,0);
+    if((void*)p == MAP_FAILED)
+    {
+        return 1;
+    }
+    //init ready =0
+    p->ready=0;
     return 0;
 }
