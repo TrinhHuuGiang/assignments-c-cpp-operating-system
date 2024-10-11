@@ -1,0 +1,42 @@
+1. [   pid_t fork(void)   ]
+    - Tạo ra một tiến trình con bằng cách sao chép tiến trình cha.
+        Sau khi gọi fork(), cả tiến trình cha và con đều tiếp tục thực thi từ vị trí gọi fork().
+    - Trả về 0 trong tiến trình con
+        Trả về PID của con trong tiến trình cha.
+        Nếu thất bại, trả về -1.
+
+2. [   int execv(const char *path, char *const argv[])   ]
+    - Thay thế tiến trình hiện tại bằng một chương trình mới.
+        Sau khi gọi exec(), tiến trình không tiếp tục thực thi mã cũ
+        mà thay vào đó là mã của chương trình mới.
+    - Hàm exec có nhiều biến thể (execl, execp, execv,...)
+        nhưng chung quy đều thay thế tiến trình hiện tại.
+
+3. [   pid_t wait(int *status)   ]
+    - Đợi một tiến trình con kết thúc, và thu thập mã kết thúc của nó.
+        Nếu không có tiến trình con nào, wait() sẽ trả về ngay lập tức.
+    - Trả về PID của tiến trình con đã kết thúc
+        và lưu mã trạng thái vào status.
+
+4. [   void exit(int status)   ]
+    - Kết thúc tiến trình hiện tại và trả về mã trạng thái cho
+        hệ điều hành hoặc tiến trình cha.
+    - 'status' là mã trạng thái, thường là 0 (thành công) hoặc 1 (lỗi).
+
+5. [   void abort(void)   ]
+    - Dừng ngay lập tức tiến trình hiện tại và tạo ra một tín hiệu
+        báo lỗi (thường là SIGABRT).
+
+
+6. [   void (*signal(int sig, void (*func)(int)))(int)   ]
+    - Thiết lập hàm xử lý tín hiệu cho một loại tín hiệu nhất định.
+        Tín hiệu là thông điệp mà hệ điều hành hoặc tiến trình khác
+        gửi đến để điều khiển một tiến trình.
+    - 'sig' là loại tín hiệu (như SIGINT, SIGTERM,...).
+    - 'func' là hàm sẽ xử lý tín hiệu.
+
+7. [   int kill(pid_t pid, int sig)   ]
+    - Gửi tín hiệu đến một tiến trình khác. 
+        Tín hiệu này có thể dừng hoặc điều khiển tiến trình đích.
+    - 'pid' là ID của tiến trình đích.
+    - 'sig' là loại tín hiệu gửi đến (ví dụ SIGKILL, SIGTERM,...).
