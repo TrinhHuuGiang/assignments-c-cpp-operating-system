@@ -1,10 +1,10 @@
-Operating systems, semester 20241
+Operating systems, semester 20241, HUST
 =================================
 
 * **[Giang Trinh](https://github.com/TrinhHuuGiang)**
 
   * 
 
-* **[nqv96](https://github.com/nqv96)**
+* **[VuongNQ](https://github.com/nqv96)**
 
   * 
