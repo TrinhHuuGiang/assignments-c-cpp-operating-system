@@ -13,9 +13,3 @@ my_project/
 ├── requirements.txt       # Danh sách các thư viện cần thiết
 ├── README.md              # Tài liệu hướng dẫn sử dụng
 └── main.py                # Tệp chính để chạy chương trình
-
-# __init__
-    |1| from my_package import module1
-
-# main.py
-    |1| from my_package import module1  # Import module1 từ package
