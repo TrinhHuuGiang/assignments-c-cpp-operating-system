@@ -82,4 +82,7 @@ static void* thread_1(void* param)
     
     //thread done ready = 0
     s_cal_sum.ready=0;
+
+    //end thread return nothing
+    pthread_exit(0);//0 may be NULL :))
 }
