@@ -40,7 +40,7 @@ Plist* init_new_Plist(uint32_t id, uint32_t arrival_time, uint32_t burst_time);
  * @param first_proc Pointer to the first element of the process list.
  * @return int 0 if no error, -1 if an error occurred.
  */
-uint8_t delete_Plist(Plist* first_proc);
+int8_t delete_Plist(Plist* first_proc);
 
 
 #endif/* _SJN_LL_ */
