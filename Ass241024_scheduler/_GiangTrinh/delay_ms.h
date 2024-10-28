@@ -1,5 +1,5 @@
-#ifndef DELAY_H
-#define DELAY_H
+#ifndef _DELAY_MILLIS_
+#define _DELAY_MILLIS_
 /********************************************************************************
 * Definitions
 ********************************************************************************/
@@ -12,8 +12,8 @@
     #define DELAY_MILLIS(x) usleep((x) * 1000)  // POSIX using usleep(micro_sec*1000)
 
 #else
-    #error "Hệ điều hành không được hỗ trợ! Chỉ hỗ trợ Windows và các hệ POSIX (Linux, macOS, ...)."
+    #error "Only support 'sleep/delay millisecond' for Window and POSIX"
 
 #endif
 
-#endif // DELAY_H
+#endif // _DELAY_MILLIS_
