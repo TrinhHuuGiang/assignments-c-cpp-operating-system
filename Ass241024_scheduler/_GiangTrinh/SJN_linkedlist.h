@@ -14,7 +14,7 @@ typedef struct t_Proc_Linkedlist
     uint32_t burst_time;
     time_t   start_time;
     time_t   end_time;
-    Plist*   Next;
+    struct t_Proc_Linkedlist*   Next;
 } Plist;
 
 
@@ -51,6 +51,7 @@ int8_t arrange_Plist_by_time_arrival(Plist** first_proc);
  * @return only return 0 :)
  */
 int8_t move_to_first_another_Plist(Plist** first_list1, Plist* memlist1, Plist** first_list2);
+
 
 /**
  * @brief Delete the process list.
