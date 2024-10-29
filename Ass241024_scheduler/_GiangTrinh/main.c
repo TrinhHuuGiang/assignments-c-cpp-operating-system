@@ -27,9 +27,10 @@ thời điểm bắt đầu, thời gian chạy của từng process
 /********************************************************************************
 * Variables
 ********************************************************************************/
-static uint32_t event_id[MAX_EVENT] =           {1,2,3,4,5,6,7,8,9,10};
-static uint32_t event_arrival_time[MAX_EVENT] = {8,5,5,3,1,6,2,7,10,9};
-static uint32_t event_burst_time[MAX_EVENT] =   {9,10,7,2,6,1,3,5,5,8};
+static uint32_t event_id[MAX_EVENT] =           {  1,  2,  3,  4,  5,  6,  7,  8,  9, 10};
+static uint32_t event_arrival_time[MAX_EVENT] = {800,500,500,300,100,600,200,700,100,900};
+static uint32_t event_burst_time[MAX_EVENT] =   {900,100,700,200,600,100,300,500,500,800};
+static uint32_t start_scheduler = 0;
 /********************************************************************************
 * Prototypes
 ********************************************************************************/
@@ -62,12 +63,29 @@ int main(int argc,const char* argv)
         //running child process
         Plist* running_proc = NULL;
 
-        //start init 
+        //[start init] 
         printf("Parent process...\n");
         //first arrange not yet arrival events in arrival time from small to large to simulate realtime
         //init blocked list
+        for(int i = 0; i<MAX_EVENT;i++)
+        {
+            if(add_new_to_Plist(blocked_first,event_id[i],event_arrival_time[i],event_burst_time[i]))
+            {
+                fprintf(stderr,"[err_%s] init blocked list failed",__FUNCTION__);
+                return 1;
+            }
+        }
 
+        //arrange blocked list by time arrival
+        if(arrange_Plist_by_time_arrival(blocked_first))
+        {
+            fprintf(stderr,"[err_%s] arrange blocked list failed",__FUNCTION__);
+            return 2;
+        }
 
+        //[start handle events]
+        printf("Start time: 00:00:00.000\n__________\n\n");
+        start_scheduler = GET_CURRENT_MILLIS;//get current time millisec
 
     }
 
