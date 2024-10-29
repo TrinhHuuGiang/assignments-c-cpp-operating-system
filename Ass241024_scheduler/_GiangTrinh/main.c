@@ -10,6 +10,8 @@ thời điểm bắt đầu, thời gian chạy của từng process
 /********************************************************************************
 * Definitions
 ********************************************************************************/
+#define DEBUG 1
+
 // common libraries
 #include <stdio.h>
 #include <stdint.h>
@@ -50,7 +52,7 @@ int main(int argc,const char* argv[])
     // WINDOW: check if this is a child process by argc and argv
     if (argc > 1)
     {
-        fprintf(stderr,"Child process...\n");
+        fprintf(stderr,"\nChild process...\n");
         window_child = 0;//disable code for parent process
     }
     #endif /* _WIN32 */
@@ -87,6 +89,13 @@ int main(int argc,const char* argv[])
             fprintf(stderr,"[err_%s] arrange blocked list failed",__FUNCTION__);
             return 2;
         }
+
+#if DEBUG
+        Plist* ttt = blocked_first;
+        printf("Sort by arrival: ");
+        while(ttt != NULL) {printf("%d ",ttt->id);ttt=ttt->Next;}
+        printf("\n_____\n");
+#endif
         
         //[start handle events]
         printf("Start time: 00:00:00.000\n__________\n\n");
@@ -105,13 +114,15 @@ int main(int argc,const char* argv[])
         {
             //[check arrival time]
             Plist* temp = blocked_first;
-            uint32_t delta_time = get_current_millis() - start_scheduler; 
-            while((temp != NULL) && (temp->arrival_time<delta_time))
+            uint32_t delta_time = get_current_millis() - start_scheduler;
+
+            while((temp != NULL) && (temp->arrival_time < delta_time))
             {
                 //if not empty list or reach the end of list
                 //and arrival time < delta time (time from parent process start scheduler)
                 //else stop check list
                 move_to_first_another_Plist(&blocked_first,temp,&ready_first);
+                temp = temp->Next;
             }
 
             //[check ready list]
@@ -183,7 +194,7 @@ int main(int argc,const char* argv[])
                 free(shortest_burst);
 
                 // print to file
-                fprintf(stdout,"ID: %-10d\n|Arrival:%-10d\n|Start  :%-10d\n|End    :%-10d\n|RunTime:%-10d\n|Burst  :%-10d__________",
+                fprintf(stdout,"ID: %-10d|Arrival:%-10d|Start  :%-10d|End    :%-10d|RunTime:%-10d|Burst  :%-10d\n__________\n",
                 running_proc->id, running_proc->arrival_time, 
                 running_proc->start_time,running_proc->end_time,
                 running_proc->end_time - running_proc->start_time,
@@ -198,8 +209,10 @@ int main(int argc,const char* argv[])
         delete_shm(shmid);
 
         //exit ok
+        fprintf(stderr,"\n[END PROGRAM] - NO ERROR");
         return 0;
     }
+
 #ifdef _WIN32
     //[WINDOW CHILD Running process]   
     {
