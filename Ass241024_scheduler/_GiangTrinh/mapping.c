@@ -6,8 +6,6 @@
 #ifdef _WIN32
     #include <windows.h>
 
-    typedef HANDLE SHARED_ID;
-
     // Macro để mở bộ nhớ chia sẻ
     #define OPEN_SHM(shmid_ptr ,name, size) \
         {\
@@ -23,7 +21,7 @@
         MapViewOfFile(shmid, FILE_MAP_ALL_ACCESS, 0, 0, size)
 
     // Macro để giải phóng vùng nhớ chia sẻ
-    #define CLOSE_SHM(shmid) \
+    #define CLOSE_SHM(shmid, name) \
     { \
         /*check NULL and free*/\
         if (shmid) CloseHandle(shmid); \
@@ -34,13 +32,11 @@
     #include <unistd.h>      //For ftruncate()
     #include <sys/mman.h>    //For mmap, shm_unlink(add Realtime extensionlib)
 
-    typedef int SHARED_ID;
-
     // Macro để mở bộ nhớ chia sẻ
     #define OPEN_SHM(shmid_ptr, name, size) \
     {\
-        int code;
-        shmid_ptr = (int*)shmid_ptr;
+        int code;\
+        shmid_ptr = (int*)shmid_ptr;\
         /*0666 == 0(octal) 110(owner r/w) 110(group) 110(others)*/\
         *shmid_ptr = shm_open(name, O_CREAT | O_RDWR, 0666);\
         if(*shmid_ptr == -1) {return -1;}\
@@ -54,9 +50,9 @@
         mmap(NULL,size,PROT_WRITE,MAP_SHARED,shmid,0);
 
     // Macro để giải phóng vùng nhớ chia sẻ
-    #define CLOSE_SHM(shmid) \
+    #define CLOSE_SHM(shmid, name) \
     { \
-        shm_unlink(shmid);\
+        shm_unlink(name);\
     }
 
 #else
@@ -78,7 +74,7 @@ void* get_link_shm(SHARED_ID shmid,int size)
     return LINK_TO_SHM(shmid,size);
 }
 
-void delete_shm(SHARED_ID shmid)
+void delete_shm(SHARED_ID shmid, char* shm_name)
 {
-    CLOSE_SHM(shmid);
+    CLOSE_SHM(shmid, shm_name);
 }

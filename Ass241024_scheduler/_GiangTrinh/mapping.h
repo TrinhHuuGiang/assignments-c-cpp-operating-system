@@ -23,6 +23,6 @@ int open_shm(SHARED_ID* shmid_ptr,char* name, int size);
 
 void* get_link_shm(SHARED_ID shmid,int size);
 
-void delete_shm(SHARED_ID shmid);
+void delete_shm(SHARED_ID shmid, char* shm_name);
 
 #endif/* MAPPING */

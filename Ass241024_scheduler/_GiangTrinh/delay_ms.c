@@ -7,17 +7,19 @@
     #include <windows.h>
 
     #define DELAY_MILLIS(x) Sleep(x)  // Windows using Sleep(millis_sec)
-    #define GET_CURRENT_MILLIS GetTickCount()
+    #define GET_CURRENT_MILLIS(millis_ptr) GetTickCount()
 
 #elif defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__))
     #include <unistd.h>
     #include <time.h>
 
     #define DELAY_MILLIS(x) usleep((x) * 1000)  // POSIX using usleep(micro_sec*1000)
-    #define GET_CURRENT_MILLIS { \
+    #define GET_CURRENT_MILLIS(millis_ptr) \
+    { \
         struct timespec ts; \
-        clock_gettime(CLOCK_MONOTONIC, &ts); \
-        return (ts.tv_sec * 1000.0) + (ts.tv_nsec / 1e6); \
+         /*CLOCK_REALTIME available, CLOCK_MONOTONIC missing :(*/\
+        clock_gettime(CLOCK_REALTIME, &ts); \
+        *millis_ptr = (ts.tv_sec * 1000.0) + (ts.tv_nsec / 1e6); \
     }
 
 #else
@@ -33,7 +35,7 @@ void delay_millis(int x_milis)
     DELAY_MILLIS(x_milis);
 }
 
-int get_current_millis()
+void get_current_millis(uint32_t* millis_ptr)
 {
-    return GET_CURRENT_MILLIS;
+    GET_CURRENT_MILLIS(millis_ptr);
 }

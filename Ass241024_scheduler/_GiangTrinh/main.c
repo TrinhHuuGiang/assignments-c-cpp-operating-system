@@ -10,11 +10,12 @@ thời điểm bắt đầu, thời gian chạy của từng process
 /********************************************************************************
 * Definitions
 ********************************************************************************/
-#define DEBUG 1
+#define DEBUG 0
 
 // common libraries
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>    //free
 // linkedlist scheduler
 #include "SJN_linkedlist.h"
 // shared memory
@@ -70,6 +71,7 @@ int main(int argc,const char* argv[])
         //save start time, stop time. send burst time to child process will run
         Plist* running_proc = NULL;
 
+        fprintf(stderr,"[SHORTEST JOB FIRST]\n");
         //[start init] 
         fprintf(stderr,"Parent process...\n");
         //first arrange not yet arrival events in arrival time from small to large to simulate realtime
@@ -92,14 +94,14 @@ int main(int argc,const char* argv[])
 
 #if DEBUG
         Plist* ttt = blocked_first;
-        printf("Sort by arrival: ");
+        fprintf(stderr, "Sort by arrival: ");
         while(ttt != NULL) {printf("%d ",ttt->id);ttt=ttt->Next;}
-        printf("\n_____\n");
+        fprintf(stderr,"\n_____\n");
 #endif
         
         //[start handle events]
         printf("Start time: 00:00:00.000\n__________\n\n");
-        start_scheduler = get_current_millis();//get current time millisec
+        get_current_millis(&start_scheduler);//get current time millisec
         //init shared memory
         if(open_shm(&shmid,SHM_RUNNING_CHILD,sizeof(Plist)))
         {
@@ -114,7 +116,11 @@ int main(int argc,const char* argv[])
         {
             //[check arrival time]
             Plist* temp = blocked_first;
-            uint32_t delta_time = get_current_millis() - start_scheduler;
+            uint32_t delta_time;
+
+            //get delta time == time from program running
+            get_current_millis(&delta_time);
+            delta_time -= start_scheduler;
 
             while((temp != NULL) && (temp->arrival_time < delta_time))
             {
@@ -161,7 +167,8 @@ int main(int argc,const char* argv[])
                 }
                 // send burst time to child will be running
                 *running_proc = *shortest_burst;
-                running_proc->start_time = get_current_millis()-start_scheduler;
+                get_current_millis((uint32_t*)&(running_proc->start_time));
+                running_proc->start_time -= start_scheduler;
 
                 //[Run child process]   
                 {
@@ -173,13 +180,14 @@ int main(int argc,const char* argv[])
                         return 4;
                     }
 
-                    #if defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__))
                     //[POSIX CHILD Running process]
+                    #if defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__))
                     if(pid == 0)
                     {
+                        fprintf(stderr,"Child process...\n");
                         //only delay burst ms
                         delay_millis(running_proc->burst_time);
-                        
+                        return 0; //end CHILD process
                     }
                     #endif
 
@@ -188,13 +196,14 @@ int main(int argc,const char* argv[])
                 }
 
                 // save end time
-                running_proc->end_time = get_current_millis() - start_scheduler;
+                get_current_millis((uint32_t*)&(running_proc->end_time));
+                running_proc->end_time -= start_scheduler;
 
                 // free ran process
                 free(shortest_burst);
 
                 // print to file
-                fprintf(stdout,"ID: %-10d|Arrival:%-10d|Start  :%-10d|End    :%-10d|RunTime:%-10d|Burst  :%-10d\n__________\n",
+                fprintf(stdout,"ID: %-10u|Arrival:%-10u|Start  :%-10ld|End    :%-10ld|RunTime:%-10ld|Burst  :%-10u\n__________\n",
                 running_proc->id, running_proc->arrival_time, 
                 running_proc->start_time,running_proc->end_time,
                 running_proc->end_time - running_proc->start_time,
@@ -206,10 +215,10 @@ int main(int argc,const char* argv[])
 
         //end parent scheduler
         //delete shared memory
-        delete_shm(shmid);
+        delete_shm(shmid, SHM_RUNNING_CHILD);
 
         //exit ok
-        fprintf(stderr,"\n[END PROGRAM] - NO ERROR");
+        fprintf(stderr,"\n[END PROGRAM] - NO ERROR\n");
         return 0;
     }
 
