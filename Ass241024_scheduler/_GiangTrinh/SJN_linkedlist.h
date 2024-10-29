@@ -4,6 +4,7 @@
 * Definitions
 ********************************************************************************/
 #include <stdint.h>
+#include <time.h>
 
 typedef struct t_Proc_Linkedlist
 {
@@ -11,7 +12,9 @@ typedef struct t_Proc_Linkedlist
     uint32_t id;
     uint32_t arrival_time;
     uint32_t burst_time;
-    Plist* Next;
+    time_t   start_time;
+    time_t   end_time;
+    Plist*   Next;
 } Plist;
 
 
@@ -19,10 +22,9 @@ typedef struct t_Proc_Linkedlist
 * API
 ********************************************************************************/
 /**
- * @brief Create a new Process linked list.
+ * @brief Add a new Process to linked list.
  * 
- * This function initializes a new process linked list
- * with the specified parameters to add a new member.
+ * add a new member to linkedlist.
  * Memory for the new member is dynamically allocated.
  * 
  * @param id  Identifier for the process.
@@ -31,7 +33,7 @@ typedef struct t_Proc_Linkedlist
  * 
  * @return Plist* : Pointer to unique member of the Process list.
  */
-Plist* init_new_Plist(uint32_t id, uint32_t arrival_time, uint32_t burst_time);
+Plist* add_to_Plist(uint32_t id, uint32_t arrival_time, uint32_t burst_time);
 
 /**
  * @brief Delete the process list.

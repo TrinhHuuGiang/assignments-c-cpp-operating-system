@@ -37,7 +37,7 @@
         ))\
         {return -1;}  /* failed */\
         else return 0;/* create process success */\
-    }\
+    }
     
     #define WAIT_PROC(pid) \
     {\
@@ -47,7 +47,7 @@
         /* close hanle for process and thread */\
         CloseHandle(pid.hProcess);\
         CloseHandle(pid.hThread);\
-    }\
+    }
 
 #elif defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__))
     #include <unistd.h>      //fork
@@ -61,7 +61,7 @@
         if(*pid_ptr == -1)\
         {return -1;}\
         else return 0;\
-    }\
+    }
 
     #define WAIT_PROC(pid) waitpid(pid,NULL,0)  //wait child process close
 
