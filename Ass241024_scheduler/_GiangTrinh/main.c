@@ -100,7 +100,9 @@ int main(int argc,const char* argv[])
 #endif
         
         //[start handle events]
-        printf("Start time: 00:00:00.000\n__________\n\n");
+        fprintf(stdout,"Start time: 00:00:00.000\n__________\n\n");
+        fflush(stdout);
+
         get_current_millis(&start_scheduler);//get current time millisec
         //init shared memory
         if(open_shm(&shmid,SHM_RUNNING_CHILD,sizeof(Plist)))
@@ -209,6 +211,7 @@ int main(int argc,const char* argv[])
                 running_proc->end_time - running_proc->start_time,
                 running_proc->burst_time
                 );
+                fflush(stdout);
             }
 
         }
