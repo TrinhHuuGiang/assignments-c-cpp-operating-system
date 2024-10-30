@@ -17,8 +17,8 @@
     #define GET_CURRENT_MILLIS(millis_ptr) \
     { \
         struct timespec ts; \
-         /*CLOCK_REALTIME available, CLOCK_MONOTONIC missing :(*/\
-        clock_gettime(CLOCK_REALTIME, &ts); \
+         /* go to definition in time.h*/\
+        clock_gettime(CLOCK_MONOTONIC, &ts); \
         *millis_ptr = (ts.tv_sec * 1000.0) + (ts.tv_nsec / 1e6); \
     }
 
