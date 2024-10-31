@@ -7,7 +7,10 @@
     #include <windows.h>
 
     #define DELAY_MILLIS(x) Sleep(x)  // Windows using Sleep(millis_sec)
-    #define GET_CURRENT_MILLIS(millis_ptr) GetTickCount()
+    #define GET_CURRENT_MILLIS(millis_ptr) \
+    {\
+        *millis_ptr = GetTickCount();\
+    }
 
 #elif defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__))
     #include <unistd.h>
