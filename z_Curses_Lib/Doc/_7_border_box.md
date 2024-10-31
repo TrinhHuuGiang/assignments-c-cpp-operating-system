@@ -3,7 +3,7 @@ Vẽ Đường Viền trong curses
 Trong curses của Python, bạn có thể sử dụng các hàm sau để vẽ đường viền cho cửa sổ:
 1. Hàm border()
 
-    Tạo đường viền xung quanh cửa sổ với các ký tự mặc định hoặc tùy chọn.
+- Tạo đường viền xung quanh cửa sổ với các ký tự mặc định hoặc tùy chọn.
     Cú pháp:
 
     python
@@ -21,7 +21,7 @@ Trong curses của Python, bạn có thể sử dụng các hàm sau để vẽ 
 
 2. Hàm box()
 
-    Tạo đường viền với ký tự dọc và ký tự ngang.
+- Tạo đường viền với ký tự dọc và ký tự ngang.
     Cú pháp:
 
     python
@@ -31,7 +31,7 @@ Trong curses của Python, bạn có thể sử dụng các hàm sau để vẽ 
         vch: Ký tự viền dọc.
         hch: Ký tự viền ngang.
 
-Ví dụ Minh Họa
+- Ví dụ Minh Họa
 
 python
 
@@ -46,8 +46,7 @@ def main(stdscr):
 
 curses.wrapper(main)
 
-Ghi chú
+- Ghi chú
 
     Hàm border() sử dụng các ký tự mặc định nếu không có tham số nào được cung cấp.
     Hàm box() thích hợp cho việc sử dụng một ký tự cho cả hai cạnh.
-    
