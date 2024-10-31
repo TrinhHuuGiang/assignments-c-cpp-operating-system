@@ -38,11 +38,11 @@ python
 import curses
 
 def main(stdscr):
-    stdscr.clear()       # Xóa màn hình
-    stdscr.border()      # Vẽ đường viền
-    # stdscr.box('|', '-')  # Vẽ đường viền với ký tự tùy chọn
-    stdscr.refresh()     # Làm mới màn hình
-    stdscr.getch()       # Đợi phím nhấn
+    stdscr.clear()       # Xóa màn hình  
+    stdscr.border()      # Vẽ đường viền  
+    # stdscr.box('|', '-')  # Vẽ đường viền với ký tự tùy chọn  
+    stdscr.refresh()     # Làm mới màn hình  
+    stdscr.getch()       # Đợi phím nhấn  
 
 curses.wrapper(main)
 
