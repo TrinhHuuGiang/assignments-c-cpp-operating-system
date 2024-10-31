@@ -204,6 +204,7 @@ int main(int argc,const char* argv[])
                 // free ran process
                 free(shortest_burst);
 
+                #if defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__))
                 // print to file
                 fprintf(stdout,"ID: %-10u|Arrival:%-10u|Start  :%-10ld|End    :%-10ld|RunTime:%-10ld|Burst  :%-10u\n__________\n",
                 running_proc->id, running_proc->arrival_time, 
@@ -211,6 +212,18 @@ int main(int argc,const char* argv[])
                 running_proc->end_time - running_proc->start_time,
                 running_proc->burst_time
                 );
+                #endif
+
+                #if _WIN32
+                // print to file
+                fprintf(stdout,"ID: %-10u|Arrival:%-10u|Start  :%-10ld|End    :%-10ld|RunTime:%-10ld|Burst  :%-10u\n__________\n",
+                running_proc->id, running_proc->arrival_time, 
+                running_proc->start_time,running_proc->end_time,
+                running_proc->end_time - running_proc->start_time,
+                running_proc->burst_time
+                );
+                #endif
+
                 fflush(stdout);
             }
 
