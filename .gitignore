@@ -1,2 +1,4 @@
 # Ignore execute file
 build/
+
+__pycache__/
