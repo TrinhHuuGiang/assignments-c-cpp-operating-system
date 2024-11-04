@@ -23,7 +23,7 @@
   *Kéo một bản trên repo về nhưng không hợp nhất*
 - `git diff <tên nhánh> origin/<tên nhánh>`  
   *Kiểm tra sự khác biệt giữa 2 bản*  
-  *Hoặc có thể dùng git log <tên nhánh>..orgin/<tên nhánh> để xem nhanh các commit mới*  
+  *Hoặc có thể dùng git log <tên nhánh>..origin/<tên nhánh> để xem nhanh các commit mới*  
 - `git pull origin <tên_nhánh>`  
   *Kéo các thay đổi mới nhất từ remote về máy local*
 
