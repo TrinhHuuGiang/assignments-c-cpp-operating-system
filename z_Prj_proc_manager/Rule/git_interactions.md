@@ -22,7 +22,8 @@
 - `git fetch origin <tên_nhánh>`  
   *Kéo một bản trên repo về nhưng không hợp nhất*
 - `git diff <tên nhánh> origin/<tên nhánh>`  
-  *Kiểm tra sự khác biệt giữa 2 bản*
+  *Kiểm tra sự khác biệt giữa 2 bản*  
+  *Hoặc có thể dùng git log <tên nhánh>..orgin/<tên nhánh> để xem nhanh các commit mới*  
 - `git pull origin <tên_nhánh>`  
   *Kéo các thay đổi mới nhất từ remote về máy local*
 
@@ -55,5 +56,6 @@
 ## Kiểm Tra Trạng Thái Branch Hiện Tại
 - `git status`  
   *Kiểm tra trạng thái hiện tại của repository*
-- `git log <tên nhánh>..origin/<tên nhánh>`
+- `git log <tên nhánh>..origin/<tên nhánh>`  
   *Kiểm tra có commit mới nào trên nhánh remote không*
+  *Cần kêt hợp git fetch để cập nhật branch trước*
