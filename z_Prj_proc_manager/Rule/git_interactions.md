@@ -55,5 +55,5 @@
 ## Kiểm Tra Trạng Thái Branch Hiện Tại
 - `git status`  
   *Kiểm tra trạng thái hiện tại của repository*
-- `git log git log <tên nhánh>..origin/<tên nhánh>`
+- `git log <tên nhánh>..origin/<tên nhánh>`
   *Kiểm tra có commit mới nào trên nhánh remote không*
