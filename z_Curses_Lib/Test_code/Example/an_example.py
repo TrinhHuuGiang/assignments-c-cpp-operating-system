@@ -22,6 +22,8 @@ def mainwindow(stdscr):
     stdscr.addstr("Dang in bat dau o hang 3, cot 2", curses.A_ITALIC)
     stdscr.addstr(4, 2, "Error ", curses.A_REVERSE)
     stdscr.addstr(4,8,"Khi thay doi kich thuoc cua so thi chuong trinh bi tat !!!", curses.A_ITALIC)
+    stdscr.addstr(5,8,"hoac co hanh vi sai.", curses.A_ITALIC)
+    stdscr.addstr(6,8,"Vi no coi tin hieu resize cung la input", curses.A_ITALIC)
     # clear for another purpose
     stdscr.getkey(); stdscr.clear(); stdscr.box('!','~')
     stdscr.refresh()
