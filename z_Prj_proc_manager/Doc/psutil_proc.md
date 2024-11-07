@@ -7,6 +7,8 @@
 - [Cấu trúc thư viện](#cấu-trúc-thư-viện)
 <!-- - [Hướng dẫn sử dụng cơ bản](#hướng-dẫn-sử-dụng-cơ-bản) -->
 - [Danh sách các hàm](#danh-sách-các-hàm)
+- [Xử lý ngoại lệ](#exceptions)
+- [Process Class](#process-class)
 - [Tham khảo thêm](#tham-khảo-thêm)
 - [Tài liệu chính thức](#tài-liệu-chính-thức)
 
@@ -73,8 +75,146 @@ procs = [psutil.Process(pid) for pid in [123, 456, 789]]
 gone, alive = psutil.wait_procs(procs, timeout=10, callback=on_terminate)
 print(f"Terminated processes: {gone}")
 print(f"Still running processes: {alive}")
+for p in alive: // kill các process alive sau khi hết timeout
+    p.kill()
+```
+## Exceptions
+
+1. **`class psutil.Error`**: Lớp ngoại lệ cơ bản, tất cả các trường hợp ngoại lệ khác đều kế thừa từ trường hợp này.
+    - Quyền hạn không đủ: Khi chương trình của bạn không có quyền truy cập vào thông tin về các tiến trình khác hoặc không thể thực hiện các thao tác trên chúng.
+    - Tiến trình không tồn tại: Khi bạn cố gắng truy cập vào một tiến trình đã bị kết thúc hoặc không tồn tại.
+    - Lỗi hệ thống: Khi có lỗi xảy ra ở cấp độ hệ điều hành, ví dụ như lỗi I/O, lỗi bộ nhớ, v.v.
+    - Tham số không hợp lệ: Khi bạn truyền vào các tham số không đúng hoặc không hợp lệ cho các hàm của psutil.
+
+**Lí do sử dụng**: giúp chương trình không bị dừng đột ngột, xử lý lỗi linh hoạt hơn như log lỗi, gửi thông báo, thực hiện các biện pháp khôi phục
+
+**Ví dụ**
+```python
+try:
+    # Lấy thông tin của một tiến trình không tồn tại
+    p = psutil.Process(999999)
+    print(p.name())
+except psutil.Error as e:
+    print(f"Lỗi xảy ra: {e}") 
+```
+2. **`class psutil.NoSuchProcess(pid, name=None, msg=None)`**: được đưa ra khi không thể tìm thấy một quy trình có ID tiến trình (PID) được chỉ định hoặc tiến trình đó không còn tồn tại(terminated). Đây là một lớp con của ngoại lệ psutil.Error tổng quát hơn.
+
+**Lí do sử dụng**
+- Xử lý lỗi: Điều quan trọng là phải xử lý ngoại lệ này để ngăn chương trình của bị crashing (*sập đột ngột*).
+- Thông tin lỗi cụ thể: Đối tượng ngoại lệ cung cấp thông tin về quy trình bị thiếu, chẳng hạn như PID và tên của nó (nếu có).
+
+**Ví dụ**
+```python
+try:
+    p = psutil.Process(12345)  # Assuming process with PID 12345 doesn't exist
+    print(p.name())
+except psutil.NoSuchProcess as e:
+    print(f"Process with PID 12345 not found: {e}")
 ```
 
+3. **`class psutil.ZombieProcess(pid, name=None, ppid=None, msg=None)`**: đưa ra khi một tiến trình ở trạng thái zombie. Một tiến trình zombie là một tiến trình đã kết thúc nhưng mục nhập của nó trong bảng tiến trình vẫn tồn tại.
+    - Đưa ra khi cố gắng truy cập thông tin về tiến trình zombie bằng psutil. Có thể xảy ra trong trường hợp một tiến trình con đã kết thúc nhưng tiến trình cha của nó vẫn chưa gọi **wait()** để thu thập nó.
+
+**Lí do sử dụng**
+- Tiến trình Zombie: Chúng tiêu tốn tài nguyên hệ thống tối thiểu, nhưng chúng có thể làm lộn xộn bảng tiến trình.
+- Trách nhiệm của tiến trình cha: Trách nhiệm của tiến trình cha là thu thập các tiến trình con của nó bằng cách sử dụng lệnh gọi hệ thống **wait()**.
+
+**Giải pháp**
+- Sự khác biệt về hệ điều hành: Hoạt động của các tiến trình zombie có thể khác nhau một chút giữa các hệ điều hành khác nhau.
+
+- Công cụ giám sát hệ thống: Các công cụ như **top** hoặc **htop** có thể giúp xác định và giám sát các tiến trình của zombie.
+
+- Thực tiễn tốt nhất: Đảm bảo rằng tiến trình của bạn xử lý đúng tiến trình con và gọi **wait()** để thu thập chúng.
+
+**Ví dụ**
+```python
+try:
+    p = psutil.Process(12345)  # Assuming process 12345 is a zombie process
+    print(p.name())
+except psutil.ZombieProcess as e:
+    print(f"Process with PID 12345 is a zombie process: {e}")
+```
+
+
+4. **`class psutil.AccessDenied(pid=None, name=None, msg=None)`**: đưa ra khi người dùng thiếu đủ quyền để truy cập thông tin về một tiến trình cụ thể hoặc thực hiện các thao tác trên đó.
+    - Quyền không đủ: Khi người dùng chạy tập lệnh Python không có các đặc quyền cần thiết để truy cập thông tin tiến trình.
+    - Hạn chế của Hệ điều hành: Một số hệ điều hành có thể áp đặt các hạn chế đối với việc truy cập thông tin tiến trình, đặc biệt là đối với các tiến trình hệ thống.
+
+**Giải pháp**
+- Chạy bằng quyền root: Trên các hệ thống giống Unix, việc chạy tập lệnh bằng quyền root thường có thể cung cấp các quyền cần thiết. Tuy nhiên, việc này cần được thực hiện một cách thận trọng và chỉ khi thực sự cần thiết.
+
+- Sử dụng sudo: Trên các hệ thống giống Unix, bạn có thể sử dụng sudo để tạm thời nâng cao đặc quyền cho một lệnh cụ thể.
+
+- Phương pháp tiếp cận thay thế: Trong một số trường hợp, bạn có thể nhận được thông tin hạn chế về các quy trình mà không có quyền truy cập đầy đủ.
+
+**Ví dụ**
+```python
+try:
+    p = psutil.Process(1)  # Trying to access the init process (usually requires root privileges)
+    print(p.name())
+except psutil.AccessDenied as e:
+    print(f"Access denied to process with PID 1: {e}")
+```
+5. **`class psutil.TimeoutExpired(seconds, pid=None, name=None, msg=None)`**: đưa ra khi thời gian chờ trong khi chờ quá trình kết thúc nhưng tiến trình vẫn alive hoặc thực hiện một hành động. 
+
+**Giải pháp**
+- Điều chỉnh thời gian chờ: Giá trị thời gian chờ thích hợp tùy thuộc vào trường hợp sử dụng cụ thể và thời lượng dự kiến ​​của quá trình.
+
+- Hoạt động không chặn: Hãy cân nhắc sử dụng các hoạt động không chặn hoặc kỹ thuật lập trình không đồng bộ để tránh chặn tập lệnh của bạn trong thời gian dài.
+
+- Thông báo lỗi: Thông báo ngoại lệ có thể cung cấp thông tin về quá trình đã hết thời gian chờ và lý do hết thời gian chờ.
+
+**Ví dụ**
+```python
+try:
+    p = psutil.Process(12345)
+    p.wait(timeout=5)  # Wait for 5 seconds for the process to terminate
+except psutil.TimeoutExpired as e:
+    print(f"Process {p.pid} did not terminate within 5 seconds: {e}")
+```
+## Process Class
+
+**`oneshot()`** : 
+- Trình quản lý bối cảnh **(context manager)** tiện ích giúp tăng tốc đáng kể việc truy xuất thông tin nhiều quy trình cùng một lúc
+- Thông tin tiến trình khác nhau bên trong (ví dụ: *`name(), ppid(), uids(), create_time(), ...`)* có thể được tìm nạp bằng cách sử dụng cùng một quy trình, nhưng chỉ một giá trị được trả về và các giá trị khác sẽ bị loại bỏ.
+- Tiến trình nội bộ được thực thi 1 lần, giá trị quan tâm sẽ được trả về và các giá trị khác sẽ được lưu vào bộ nhớ cached. Bộ đệm sẽ bị xóa khi thoát khỏi khối quản lý bối cảnh.
+
+**Lưu ý** : Để tìm nạp nhiều thông tin về quy trình cùng một lúc một cách hiệu quả, hãy đảm bảo sử dụng trình quản lý bối cảnh `oneshot()` hoặc phương thức tiện ích `as_dict()`.
+
+**Ví dụ**
+```python
+p = psutil.Process()
+with p.oneshot():
+    p.name()  # execute internal routine once collecting multiple info
+    p.cpu_times()  # return cached value
+    p.cpu_percent()  # return cached value
+    p.create_time()  # return cached value
+    p.ppid()  # return cached value
+    p.status()  # return cached value
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- -----------------------Template---------------------------------------------- -->
+<!-- .**``**:
+
+- **Lí do sử dụng**
+**Ví dụ**
+```python
+
+``` -->
+<!-- -------------------------------------------------------------------------------->
 
 
 
