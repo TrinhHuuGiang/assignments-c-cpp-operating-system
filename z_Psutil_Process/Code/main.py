@@ -47,3 +47,13 @@ print(f"Involuntary context switches: {ctx_switches.involuntary}")
 num_fds = p.num_fds()
 
 print(f"Số mô tả tệp của tiến trình: {num_fds}")
+num_threads = p.num_threads()
+print(f"Number of threads : {num_threads}")
+
+threads = p.threads()
+
+for thread in threads:
+    print(f"Thread ID: {thread.id}")
+    print(f"User time: {thread.user_time}")
+    print(f"System time: {thread.system_time}")
+    # print(f"Current activity: {thread.current_activity}")

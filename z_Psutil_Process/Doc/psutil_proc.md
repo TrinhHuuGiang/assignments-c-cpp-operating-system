@@ -569,21 +569,38 @@ print(f"Số lượng handle của tiến trình: {num_handles}")
 ```
 <hr style="border: px solid;">
 
-**``**:
+**`num_threads`**: Số lượng luồng hiện đang được quá trình này sử dụng (không tích lũy).
 
 **Ví dụ**
 
 ```python
-
+num_threads = process.num_threads()
+print(f"Counts : {num_threads}")
 ```
 <hr style="border: px solid;">
 
-**``**:
+**`threads()`**: Trả về các luồng được mở bởi tiến trình dưới dạng danh sách các bộ dữ liệu được đặt tên
+
+**Giá trị trả về**
+- `id`: Mã định danh duy nhất của thread.
+
+- `user_time`: Lượng thời gian CPU được sử dụng bởi luồng ở chế độ người dùng.
+
+- `system_time`: Lượng thời gian CPU được sử dụng bởi luồng ở chế độ kernel.
+
+- `current_activity`: Hoạt động hiện tại của luồng, chẳng hạn như chạy, ngủ hoặc chờ.
 
 **Ví dụ**
 
 ```python
-
+threads = p.threads()
+for thread in threads:
+    print(f"Thread ID: {thread.id}")
+    print(f"User time: {thread.user_time}")
+    # print(f"System time: {thread.system_time}")
+# Thread ID: 95472
+# User time: 0.02
+# System time: 0.0
 ```
 <hr style="border: px solid;">
 
