@@ -604,21 +604,42 @@ for thread in threads:
 ```
 <hr style="border: px solid;">
 
-**``**:
+**`cpu_times()`**: cung cấp thông tin chi tiết về thời gian CPU được sử dụng bởi một tiến trình. Nó trả về một namedtuple chứa các trường sau:
 
+- `user`: Lượng thời gian CPU dành để thực thi mã người dùng.
+- `system`: Lượng thời gian CPU dành để thực thi mã hạt nhân thay mặt cho tiến trình.
+- `children_user`: Lượng thời gian CPU dành cho các tiến trình con ở chế độ người dùng. 
+- `children_system`: Lượng thời gian CPU dành cho các tiến trình con ở chế độ kernel.
 **Ví dụ**
 
 ```python
+cpu_times = p.cpu_times()
+print(cpu_times)
+sum(p.cpu_times()[:2]) # tích lũy, không bao gồm children và iowait 
 
+# pcputimes(user=0.01, system=0.0, children_user=0.0, children_system=0.0, iowait=0.0)
 ```
 <hr style="border: px solid;">
 
-**``**:
+**`cpu_percent(interval=None)`**: tính toán việc sử dụng CPU của một quá trình cụ thể. Nó trả về một số float biểu thị việc sử dụng CPU dưới dạng phần trăm.
+
+- `interval=None`: Chế độ này tính toán mức sử dụng CPU kể từ lệnh gọi cuối cùng tới cpu_percent(). Nó rất hữu ích để có được ảnh chụp nhanh về mức sử dụng CPU hiện tại. Tuy nhiên, lệnh gọi đầu tiên có interval=None sẽ luôn trả về 0,0 vì không có phép đo nào trước đó để so sánh.
+
+- `interval=X`: Chế độ này tính toán mức sử dụng CPU trong khoảng thời gian X được chỉ định tính bằng giây. Nó cung cấp phép đo chính xác và nhất quán hơn về mức sử dụng CPU theo thời gian.
+
+**Đặc trưng**
+- `Độ chính xác`: Để đo chính xác, bạn nên sử dụng giá trị khoảng khác 0.
+
+- `Nhiều cuộc gọi`: Để nhận được các cập nhật sử dụng CPU liên tục, bạn có thể gọi cpu_percent() liên tục với cùng một giá trị khoảng thời gian.
+
+- `Bối cảnh quy trình`: Phương thức cpu_percent() tính toán mức sử dụng CPU của quy trình cụ thể, chứ không phải mức sử dụng CPU của toàn hệ thống.
 
 **Ví dụ**
 
 ```python
+cpu_percent = p.cpu_percent(interval=1)
 
+print(f"CPU usage: {cpu_percent}%")
 ```
 <hr style="border: px solid;">
 

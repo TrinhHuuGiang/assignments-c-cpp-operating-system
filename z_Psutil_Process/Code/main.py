@@ -57,3 +57,9 @@ for thread in threads:
     print(f"User time: {thread.user_time}")
     print(f"System time: {thread.system_time}")
     # print(f"Current activity: {thread.current_activity}")
+cpu_times = p.cpu_times()
+print(cpu_times)
+
+cpu_percent = p.cpu_percent(interval=2)
+
+print(f"CPU usage: {cpu_percent}%")
