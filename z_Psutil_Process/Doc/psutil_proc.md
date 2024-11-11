@@ -517,6 +517,58 @@ pio(read_count=454556, write_count=3456, read_bytes=110592, write_bytes=0, read_
 ```
 <hr style="border: px solid;">
 
+**`num_ctx_switches()`**: Số lần chuyển ngữ cảnh tự nguyện và không tự nguyện được thực hiện bởi quá trình này (tích lũy).
+
+- Voluntary Context Switches: Điều này xảy ra khi một tiến trình tự nguyện nhường CPU, thường là do phải chờ các thao tác I/O hoặc các sự kiện khác.
+
+- Involuntary Context Switches: Xảy ra khi hệ điều hành ưu tiên một quy trình để cho một quy trình khác có cơ hội chạy, thường là do cắt thời gian hoặc các quy trình có mức độ ưu tiên cao hơn.
+
+**Ví dụ**
+
+```python
+# Get the number of context switches
+ctx_switches = p.num_ctx_switches()
+
+print(f"Voluntary context switches: {ctx_switches.voluntary}")
+print(f"Involuntary context switches: {ctx_switches.involuntary}")
+# Voluntary context switches: 92
+# Involuntary context switches: 0
+```
+<hr style="border: px solid;">
+
+**`num_fds()`**: Số lượng bộ mô tả tệp hiện được mở bởi quá trình này (không tích lũy).
+
+**Lí do sử dụng**: 
+- Phát hiện rò rỉ tài nguyên: Nếu một tiến trình giữ quá nhiều mô tả tệp mở, nó có thể gây ra rò rỉ tài nguyên và ảnh hưởng đến hiệu suất của hệ thống.
+- Quản lý tài nguyên: Việc biết số lượng mô tả tệp của các tiến trình giúp quản lý hiệu quả các tài nguyên hệ thống.
+- Phân tích hiệu suất: Số lượng mô tả tệp có thể cung cấp thông tin về cách một tiến trình tương tác với hệ thống tệp và các thiết bị I/O.
+
+**Ví dụ**
+
+```python
+num_fds = p.num_fds()
+
+print(f"Number of file descriptions: {num_fds}")
+# 6
+```
+<hr style="border: px solid;">
+
+**`num_handles()`**: Số lượng thẻ điều khiển hiện đang được quá trình này sử dụng (không tích lũy).
+
+**Đặc điểm**: Tham chiếu đến nhiều đối tượng khác nhau
+
+- Mô tả tệp: Đã được giải thích ở câu trả lời trước.
+- Các đối tượng kernel: Như mutex, semaphore, event, timer,...
+
+**Ví dụ**
+
+```python
+num_handles = p.num_handles()
+
+print(f"Số lượng handle của tiến trình: {num_handles}")
+```
+<hr style="border: px solid;">
+
 **``**:
 
 **Ví dụ**
@@ -526,7 +578,50 @@ pio(read_count=454556, write_count=3456, read_bytes=110592, write_bytes=0, read_
 ```
 <hr style="border: px solid;">
 
+**``**:
 
+**Ví dụ**
+
+```python
+
+```
+<hr style="border: px solid;">
+
+**``**:
+
+**Ví dụ**
+
+```python
+
+```
+<hr style="border: px solid;">
+
+**``**:
+
+**Ví dụ**
+
+```python
+
+```
+<hr style="border: px solid;">
+
+**``**:
+
+**Ví dụ**
+
+```python
+
+```
+<hr style="border: px solid;">
+
+**``**:
+
+**Ví dụ**
+
+```python
+
+```
+<hr style="border: px solid;">
 
 
 **``**:

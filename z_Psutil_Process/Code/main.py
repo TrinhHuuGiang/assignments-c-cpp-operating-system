@@ -37,3 +37,13 @@ gids = p.gids()
 print(f"Real GID: {gids.real}")
 print(f"Effective GID: {gids.effective}")
 print(f"Saved GID: {gids.saved}")
+
+# Get the number of context switches
+ctx_switches = p.num_ctx_switches()
+
+print(f"Voluntary context switches: {ctx_switches.voluntary}")
+print(f"Involuntary context switches: {ctx_switches.involuntary}")
+
+num_fds = p.num_fds()
+
+print(f"Số mô tả tệp của tiến trình: {num_fds}")
