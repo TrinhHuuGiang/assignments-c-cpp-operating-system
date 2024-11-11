@@ -47,7 +47,7 @@ pip install psutil
 
 ## Danh sách các hàm
 
-1. `psutil.pids()`: Trả về danh sách đã sắp xếp các PID đang chạy. Để lặp lại tất cả các quy trình và tránh race conditions, nên ưu tiên process_iter().
+1. `psutil.pids()`: Trả về danh sách đã sắp xếp các PID đang chạy. Để lặp lại tất cả các tiến trình và tránh race conditions, nên ưu tiên process_iter().
 2. `psutil.process_iter(attrs=None, ad_value=None)`:
 - Hàm này trả về một iterator, cho phép lặp qua từng tiến trình một cách hiệu quả.
 - Tùy chỉnh thông tin cần lấy về của mỗi tiến trình thông qua tham số `attrs`
@@ -59,8 +59,8 @@ for proc in psutil.process_iter(attrs=['pid', 'name', 'cpu_percent']):
 psutil.process_iter.cache_clear() //xoá bộ nhớ đệm nội bộ
 ```
 3. `psutil.wait_procs(procs, timeout=None, callback=None)`
-- Chờ danh sách các phiên bản Quy trình kết thúc. Nó cung cấp một cách thuận tiện để giám sát và quản lý nhiều quy trình cùng một lúc.
-    - Gửi SIGTERM tới danh sách các quy trình
+- Chờ danh sách các phiên bản Quy trình kết thúc. Nó cung cấp một cách thuận tiện để giám sát và quản lý nhiều tiến trình cùng một lúc.
+    - Gửi SIGTERM tới danh sách các tiến trình
     - Cho các process chút thời gian để chấm dứt
     - Gửi SIGKILL cho những process vẫn còn sống
 - **Trả về**: 
@@ -97,11 +97,11 @@ try:
 except psutil.Error as e:
     print(f"Lỗi xảy ra: {e}") 
 ```
-2. **`class psutil.NoSuchProcess(pid, name=None, msg=None)`**: được đưa ra khi không thể tìm thấy một quy trình có ID tiến trình (PID) được chỉ định hoặc tiến trình đó không còn tồn tại(terminated). Đây là một lớp con của ngoại lệ psutil.Error tổng quát hơn.
+2. **`class psutil.NoSuchProcess(pid, name=None, msg=None)`**: được đưa ra khi không thể tìm thấy một tiến trình có ID tiến trình (PID) được chỉ định hoặc tiến trình đó không còn tồn tại(terminated). Đây là một lớp con của ngoại lệ psutil.Error tổng quát hơn.
 
 **Lí do sử dụng**
 - Xử lý lỗi: Điều quan trọng là phải xử lý ngoại lệ này để ngăn chương trình của bị crashing (*sập đột ngột*).
-- Thông tin lỗi cụ thể: Đối tượng ngoại lệ cung cấp thông tin về quy trình bị thiếu, chẳng hạn như PID và tên của nó (nếu có).
+- Thông tin lỗi cụ thể: Đối tượng ngoại lệ cung cấp thông tin về tiến trình bị thiếu, chẳng hạn như PID và tên của nó (nếu có).
 
 **Ví dụ**
 ```python
@@ -145,7 +145,7 @@ except psutil.ZombieProcess as e:
 
 - Sử dụng sudo: Trên các hệ thống giống Unix, bạn có thể sử dụng sudo để tạm thời nâng cao đặc quyền cho một lệnh cụ thể.
 
-- Phương pháp tiếp cận thay thế: Trong một số trường hợp, bạn có thể nhận được thông tin hạn chế về các quy trình mà không có quyền truy cập đầy đủ.
+- Phương pháp tiếp cận thay thế: Trong một số trường hợp, bạn có thể nhận được thông tin hạn chế về các tiến trình mà không có quyền truy cập đầy đủ.
 
 **Ví dụ**
 ```python
@@ -175,11 +175,11 @@ except psutil.TimeoutExpired as e:
 ## Process Class
 
 **`oneshot()`** : 
-- Trình quản lý bối cảnh **(context manager)** tiện ích giúp tăng tốc đáng kể việc truy xuất thông tin nhiều quy trình cùng một lúc
-- Thông tin tiến trình khác nhau bên trong (ví dụ: *`name(), ppid(), uids(), create_time(), ...`)* có thể được tìm nạp bằng cách sử dụng cùng một quy trình, nhưng chỉ một giá trị được trả về và các giá trị khác sẽ bị loại bỏ.
+- Trình quản lý bối cảnh **(context manager)** tiện ích giúp tăng tốc đáng kể việc truy xuất thông tin nhiều tiến trình cùng một lúc
+- Thông tin tiến trình khác nhau bên trong (ví dụ: *`name(), ppid(), uids(), create_time(), ...`)* có thể được tìm nạp bằng cách sử dụng cùng một tiến trình, nhưng chỉ một giá trị được trả về và các giá trị khác sẽ bị loại bỏ.
 - Tiến trình nội bộ được thực thi 1 lần, giá trị quan tâm sẽ được trả về và các giá trị khác sẽ được lưu vào bộ nhớ cached. Bộ đệm sẽ bị xóa khi thoát khỏi khối quản lý bối cảnh.
 
-**Lưu ý** : Để tìm nạp nhiều thông tin về quy trình cùng một lúc một cách hiệu quả, hãy đảm bảo sử dụng trình quản lý bối cảnh `oneshot()` hoặc phương thức tiện ích `as_dict()`.
+**Lưu ý** : Để tìm nạp nhiều thông tin về tiến trình cùng một lúc một cách hiệu quả, hãy đảm bảo sử dụng trình quản lý bối cảnh `oneshot()` hoặc phương thức tiện ích `as_dict()`.
 
 **Ví dụ**
 ```python
@@ -196,7 +196,7 @@ with p.oneshot():
 
 **`exe()`**: trả về đường dẫn thực thi của một tiến trình. Xác định chương trình hoặc tập lệnh cụ thể mà một tiến trình đang chạy.
 - Khả năng tương thích đa nền tảng: Phương pháp này hoạt động trên các hệ điều hành khác nhau, cung cấp một cách nhất quán để truy xuất đường dẫn thực thi.path.
-- Công cụ có giá trị để giám sát hệ thống, phân tích quy trình và điều tra bảo mật.
+- Công cụ có giá trị để giám sát hệ thống, phân tích tiến trình và điều tra bảo mật.
 
 **Ví dụ**
 
@@ -228,11 +228,11 @@ print(cmdline)
 
 <hr style="border: px solid;">
 
-**`environ()`**: trả về một từ điển chứa các biến môi trường của một tiến trình. Biến môi trường là cặp key-value cung cấp thông tin về môi trường thực thi của quy trình.
+**`environ()`**: trả về một từ điển chứa các biến môi trường của một tiến trình. Biến môi trường là cặp key-value cung cấp thông tin về môi trường thực thi của tiến trình.
 
 **Đặc điểm**:
 - Các biến môi trường cụ thể có sẵn có thể khác nhau giữa các hệ điều hành khác nhau.
-- Các biến này có thể ảnh hưởng đến hành vi của một quy trình, chẳng hạn như thư mục làm việc, đường dẫn đến tệp thực thi và các cài đặt cấu hình khác.
+- Các biến này có thể ảnh hưởng đến hành vi của một tiến trình, chẳng hạn như thư mục làm việc, đường dẫn đến tệp thực thi và các cài đặt cấu hình khác.
 - Truy cập và sửa đổi các biến môi trường, vì nó có thể gây ra những hậu quả không lường trước được.
 
 **Ví dụ**
@@ -267,7 +267,7 @@ print(f"Process created at: {create_time_str}")
 
 <hr style="border: px solid;">
 
-**`as_dict(attrs=None, ad_value=None)`**: Cung cấp một cách thuận tiện để truy xuất nhiều thuộc tính của một quy trình dưới dạng từ điển. 
+**`as_dict(attrs=None, ad_value=None)`**: Cung cấp một cách thuận tiện để truy xuất nhiều thuộc tính của một tiến trình dưới dạng từ điển. 
 
 **Tham số**:
 - attrs: Danh sách tên thuộc tính tùy chọn để đưa vào từ điển. Nếu không được chỉ định, tất cả các thuộc tính có sẵn sẽ được bao gồm.
@@ -322,15 +322,15 @@ for ancestor in ancestor_processes:
 
 <hr style="border: px solid;">
 
-**`cwd()`**: trả về thư mục làm việc hiện tại của một tiến trình. Đây là thư mục mà quy trình được khởi chạy hoặc thư mục mà quy trình sau đó đã thay đổi thành.
+**`cwd()`**: trả về thư mục làm việc hiện tại của một tiến trình. Đây là thư mục mà tiến trình được khởi chạy hoặc thư mục mà tiến trình sau đó đã thay đổi thành.
 
 <hr style="border: px solid;">
 
-**`username`**: Tên của người dùng sở hữu quá trình. Trên UNIX, điều này được tính bằng cách sử dụng uid quy trình thực.
+**`username`**: Tên của người dùng sở hữu quá trình. Trên UNIX, điều này được tính bằng cách sử dụng uid tiến trình thực.
 
 <hr style="border: px solid;">
 
-**`uids()`**: trả về một namedtuple chứa ID người dùng (UID) thực, hiệu quả và đã lưu của một quy trình. Các UID này rất quan trọng để hiểu các quyền và bối cảnh bảo mật của quy trình.
+**`uids()`**: trả về một namedtuple chứa ID người dùng (UID) thực, hiệu quả và đã lưu của một tiến trình. Các UID này rất quan trọng để hiểu các quyền và bối cảnh bảo mật của tiến trình.
 
 **Ví dụ**
 
@@ -373,7 +373,7 @@ print(f"Saved GID: {gids.saved}")
 ```
 <hr style="border: px solid;">
 
-**`terminal()`**: trả về thiết bị đầu cuối được liên kết với một quy trình. Thông tin này có thể hữu ích để hiểu cách một quy trình tương tác với thiết bị đầu cuối và cho mục đích gỡ lỗi.
+**`terminal()`**: trả về thiết bị đầu cuối được liên kết với một tiến trình. Thông tin này có thể hữu ích để hiểu cách một tiến trình tương tác với thiết bị đầu cuối và cho mục đích gỡ lỗi.
 
 **Ví dụ**
 
@@ -392,11 +392,11 @@ else:
 ```
 <hr style="border: px solid;">
 
-**`nice(value=None)`**: Nhận hoặc thiết lập mức độ ưu tiên của quy trình (ưu tiên). Trên UNIX, đây là con số thường đi từ -20 đến 20. Giá trị Nice càng cao thì mức độ ưu tiên của quy trình càng thấp.
+**`nice(value=None)`**: Nhận hoặc thiết lập mức độ ưu tiên của tiến trình (ưu tiên). Trên UNIX, đây là con số thường đi từ -20 đến 20. Giá trị Nice càng cao thì mức độ ưu tiên của tiến trình càng thấp.
 
 **Lí do sử dụng**:
 - Cân bằng việc sử dụng tài nguyên giữa các tiến trình khác nhau.
-- Tự nguyện giảm mức độ ưu tiên của quy trình, để quan tâm đến những người dùng khác, đặc biệt là trên các hệ thống dùng chung.
+- Tự nguyện giảm mức độ ưu tiên của tiến trình, để quan tâm đến những người dùng khác, đặc biệt là trên các hệ thống dùng chung.
 
 **Ví dụ**
 
@@ -406,7 +406,7 @@ p.nice()  # get
 ```
 <hr style="border: px solid;">
 
-**`ionice(ioclass=None, value=None)`**: Nhận hoặc thiết lập mức độ độc đáo I/O của quy trình (ưu tiên)
+**`ionice(ioclass=None, value=None)`**: Nhận hoặc thiết lập mức độ độc đáo I/O của tiến trình (ưu tiên)
 
 
 **Tham số**
@@ -418,11 +418,104 @@ p.nice()  # get
 - `Best-effort`: Ưu tiên trung bình, đây là mức ưu tiên mặc định cho hầu hết các tiến trình.
 - `Real-time`: Ưu tiên cao nhất, dành cho các tiến trình đòi hỏi thời gian đáp ứng thực sự nhanh, chẳng hạn như các tiến trình âm thanh hoặc video.
 
+**Các lớp và giá trị I/O:**
+
+- `IOPRIO_CLASS_RT`: (cao) tiến trình luôn có quyền truy cập đầu tiên vào đĩa. Sử dụng nó cẩn thận vì nó có thể làm chết đói toàn bộ hệ thống. Mức độ ưu tiên bổ sung có thể được chỉ định và nằm trong khoảng từ 0 (cao nhất) đến 7 (thấp nhất).
+
+- `IOPRIO_CLASS_BE`: (bình thường) mặc định cho mọi tiến trình chưa đặt mức ưu tiên I/O cụ thể. Mức độ ưu tiên bổ sung dao động từ 0 (cao nhất) đến 7 (thấp nhất).
+
+- `IOPRIO_CLASS_IDLE`: (thấp) nhận thời gian I/O khi không có ai khác cần đĩa. Không có giá trị bổ sung được chấp nhận.
+
+- `IOPRIO_CLASS_NONE`: được trả về khi không có mức độ ưu tiên nào được đặt trước đó.
+
 **Ví dụ**
 
 ```python
+def set_process_ionice(pid, ioclass, value):
+    """Sets the I/O nice level of a process.
+
+    Args:
+        pid: The process ID.
+        ioclass: The I/O class (one of IONICE_CLASS_IDLE, IONICE_CLASS_BESTEFFORT, IONICE_CLASS_REALTIME).
+        value: The I/O class value (0-7).
+    """
+
+    p = psutil.Process(pid)
+    p.ionice(ioclass, value)
+
+# Example usage:
+pid = 1234  # Replace with the desired PID
+set_process_ionice(pid, psutil.IOPRIO_CLASS_IDLE, 0)
 
 ```
+<hr style="border: px solid;">
+
+**`rlimit(resource, limits=None)`**: Nhận hoặc đặt giới hạn tài nguyên cho tiến trình hiện tại. Các giới hạn này kiểm soát các khía cạnh khác nhau của việc sử dụng tài nguyên của tiến trình, chẳng hạn như thời gian CPU, bộ nhớ, bộ mô tả tệp, v.v.
+
+**Đặc trưng**:
+- Giới hạn tài nguyên: Đây là những hạn chế được áp đặt lên một tiến trình để ngăn chặn nó tiêu thụ quá nhiều tài nguyên hệ thống.
+
+- Giới hạn mềm: Giới hạn hiện tại mà tiến trình được thực thi.
+
+- Giới hạn cứng: Giới hạn tối đa có thể được đặt cho tài nguyên.
+
+**Tham số**:
+
+- `resource.RLIMIT_CPU`: Giới hạn thời gian của CPU
+
+- `resource.RLIMIT_FSIZE`: Giới hạn kích thước tệp
+
+- `resource.RLIMIT_DATA`: Giới hạn kích thước phân đoạn dữ liệu
+
+- `resource.RLIMIT_STACK`: Giới hạn kích thước ngăn xếp
+
+- `resource.RLIMIT_CORE`: Giới hạn kích thước tệp lõi
+
+- `resource.RLIMIT_NOFILE`: Giới hạn số lượng file đang mở
+
+- `resource.RLIMIT_AS`: Giới hạn không gian địa chỉ
+
+- `resource.RLIMIT_NPROC`: Giới hạn số lượng tiến trình
+
+- `resource.RLIMIT_MEMLOCK`: Giới hạn bộ nhớ bị khóa
+**Ví dụ**
+
+```python
+# Get the current soft and hard limits for CPU time
+limits = resource.getrlimit(resource.RLIMIT_CPU)
+print("Current CPU time limits:", limits)
+
+# Set a soft limit of 10 seconds and a hard limit of 20 seconds
+resource.setrlimit(resource.RLIMIT_CPU, (10, 20))
+
+# Get the new limits
+new_limits = resource.getrlimit(resource.RLIMIT_CPU)
+print("New CPU time limits:", new_limits)
+```
+<hr style="border: px solid;">
+
+**`io_counters()`**: Trả về số liệu thống kê I/O của quy trình dưới dạng một bộ dữ liệu được namedtuple 
+
+- `read_count`: số lượng thao tác đọc được thực hiện (tích lũy). Điều này được cho là để đếm số lượng các cuộc gọi tổng hợp liên quan đến việc đọc như read() và pread() trên UNIX.
+
+- `write_count`: số thao tác ghi được thực hiện (tích lũy). Điều này được cho là để đếm số lượng các cuộc gọi tổng hợp liên quan đến việc ghi như write() và pwrite() trên UNIX.
+
+- `read_bytes`: số byte đã đọc (tích lũy). Luôn -1 trên BSD.
+
+- `write_bytes`: số byte được ghi (tích lũy). Luôn -1 trên BSD.
+
+**Đặc biệt với Linux**:
+- `read_chars`: số byte mà quá trình này chuyển tới các tòa nhà cao tầng read() và pread() (tích lũy). Khác với read_bytes, nó không quan tâm liệu I/O đĩa vật lý thực tế có xảy ra hay không.
+
+- `write_chars`: số byte mà quá trình này chuyển tới các tòa nhà chọc trời write() và pwrite() (tích lũy). Khác với write_bytes, nó không quan tâm liệu I/O đĩa vật lý thực tế có xảy ra hay không.
+
+**Ví dụ**
+
+```python
+p.io_counters()
+pio(read_count=454556, write_count=3456, read_bytes=110592, write_bytes=0, read_chars=769931, write_chars=203)
+```
+<hr style="border: px solid;">
 
 **``**:
 
@@ -431,22 +524,7 @@ p.nice()  # get
 ```python
 
 ```
-
-**``**:
-
-**Ví dụ**
-
-```python
-
-```
-
-**``**:
-
-**Ví dụ**
-
-```python
-
-```
+<hr style="border: px solid;">
 
 
 
@@ -458,6 +536,7 @@ p.nice()  # get
 ```python
 
 ```
+<hr style="border: px solid;">
 
 
 <!-- -----------------------Template---------------------------------------------- -->
