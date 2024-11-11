@@ -192,7 +192,7 @@ with p.oneshot():
     p.ppid()  # return cached value
     p.status()  # return cached value
 ```
-
+<hr style="border: px solid;">
 
 **`exe()`**: trả về đường dẫn thực thi của một tiến trình. Xác định chương trình hoặc tập lệnh cụ thể mà một tiến trình đang chạy.
 - Khả năng tương thích đa nền tảng: Phương pháp này hoạt động trên các hệ điều hành khác nhau, cung cấp một cách nhất quán để truy xuất đường dẫn thực thi.path.
@@ -208,6 +208,9 @@ exe_path = p.exe()
 
 print(exe_path)
 ```
+
+<hr style="border: px solid;">
+
 **`cmdline()`**: Giá trị trả về là danh sách các chuỗi, trong đó mỗi chuỗi đại diện cho một đối số dòng lệnh.
 
 **Ví dụ**
@@ -222,6 +225,9 @@ cmdline = p.cmdline()
 print(cmdline)
 # ['python3', 'Code/main.py']
 ```
+
+<hr style="border: px solid;">
+
 **`environ()`**: trả về một từ điển chứa các biến môi trường của một tiến trình. Biến môi trường là cặp key-value cung cấp thông tin về môi trường thực thi của quy trình.
 
 **Đặc điểm**:
@@ -239,6 +245,9 @@ env_vars = p.environ()
 
 print(env_vars)
 ```
+
+<hr style="border: px solid;">
+
 **`create_time()`**: trả về thời gian tạo của một tiến trình. Nó cung cấp dấu thời gian khi quá trình được bắt đầu, được biểu thị dưới dạng số dấu phẩy động biểu thị số giây kể từ kỷ nguyên Unix (ngày 1 tháng 1 năm 1970, 00:00:00 UTC).
 
 **Ví dụ**
@@ -255,6 +264,9 @@ create_time_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(create_time)
 
 print(f"Process created at: {create_time_str}")
 ```
+
+<hr style="border: px solid;">
+
 **`as_dict(attrs=None, ad_value=None)`**: Cung cấp một cách thuận tiện để truy xuất nhiều thuộc tính của một quy trình dưới dạng từ điển. 
 
 **Tham số**:
@@ -272,6 +284,9 @@ info = p.as_dict(attrs=['pid', 'name', 'cpu_percent'])
 
 print(info)
 ```
+
+<hr style="border: px solid;">
+
 **`parent()`**: trả về một đối tượng đại diện cho tiến trình cha trực tiếp của tiến trình hiện tại.
 ```python
 # Get the parent process
@@ -283,6 +298,8 @@ if parent_process:
 else:
     print("This process is a top-level process.")
 ```
+
+<hr style="border: px solid;">
 
 **`parents()`**: trả về một danh sách các đối tượng đại diện cho tất cả các tiến trình tổ tiên của tiến trình hiện tại, bắt đầu từ tiến trình cha trực tiếp và đi lên theo hệ thống phân cấp tiến trình.
 
@@ -299,15 +316,137 @@ for ancestor in ancestor_processes:
     print(f"Ancestor process PID: {ancestor.pid}")
     print(f"Ancestor process name: {ancestor.name()}")
 ```
+<hr style="border: px solid;">
+
 **`status`**: Trạng thái quá trình hiện tại dưới dạng một chuỗi. Chuỗi trả về là một trong các hằng số psutil.STATUS_*.
 
+<hr style="border: px solid;">
+
 **`cwd()`**: trả về thư mục làm việc hiện tại của một tiến trình. Đây là thư mục mà quy trình được khởi chạy hoặc thư mục mà quy trình sau đó đã thay đổi thành.
+
+<hr style="border: px solid;">
+
+**`username`**: Tên của người dùng sở hữu quá trình. Trên UNIX, điều này được tính bằng cách sử dụng uid quy trình thực.
+
+<hr style="border: px solid;">
+
+**`uids()`**: trả về một namedtuple chứa ID người dùng (UID) thực, hiệu quả và đã lưu của một quy trình. Các UID này rất quan trọng để hiểu các quyền và bối cảnh bảo mật của quy trình.
+
+**Ví dụ**
+
+```python
+# Get the current Python process
+p = psutil.Process(psutil.Process().pid)
+
+# Get the user IDs
+uids = p.uids()
+
+print(f"Real UID: {uids.real}")
+print(f"Effective UID: {uids.effective}")
+print(f"Saved UID: {uids.saved}")
+# Real UID: 1000
+# Effective UID: 1000
+# Saved UID: 1000
+```
+<hr style="border: px solid;">
+
+**`gids()`**: Id người dùng thực, hiệu quả và được lưu của quá trình này dưới dạng một bộ dữ liệu namedtuple.
+
+- `Namedtuple`: Đây là một kiểu dữ liệu đặc biệt trong Python, cho phép tạo các cấu trúc dữ liệu giống như tuple nhưng có tên cho từng phần tử.
+- `GID: Group` ID là một số nguyên duy nhất xác định một nhóm người dùng trong hệ thống Unix-like.
+- `Real GID: `GID thực tế của người dùng khởi chạy tiến trình.
+- `Effective `GID: GID hiệu dụng mà tiến trình đang sử dụng để thực hiện các hoạt động. Nó có thể khác với GID thực tế nếu tiến trình đã thay đổi quyền hạn của mình.
+- `Saved GID:` GID được lưu trữ để phục hồi sau khi tiến trình thay đổi quyền hạn của mình.
+
+**Ví dụ**
+
+```python
+
+gids = p.gids()
+
+print(f"Real GID: {gids.real}")
+print(f"Effective GID: {gids.effective}")
+print(f"Saved GID: {gids.saved}")
+# Real GID: 1000
+# Effective GID: 1000
+# Saved GID: 1000
+```
+<hr style="border: px solid;">
+
+**`terminal()`**: trả về thiết bị đầu cuối được liên kết với một quy trình. Thông tin này có thể hữu ích để hiểu cách một quy trình tương tác với thiết bị đầu cuối và cho mục đích gỡ lỗi.
+
+**Ví dụ**
+
+```python
+# Get the current Python process
+p = psutil.Process(psutil.Process().pid)
+
+# Get the terminal device
+terminal = p.terminal()
+
+if terminal:
+    print(f"Process is associated with terminal: {terminal}")
+else:
+    print("Process is not associated with a terminal.")
+# Process is associated with terminal: /dev/pts/7
+```
+<hr style="border: px solid;">
+
+**`nice(value=None)`**: Nhận hoặc thiết lập mức độ ưu tiên của quy trình (ưu tiên). Trên UNIX, đây là con số thường đi từ -20 đến 20. Giá trị Nice càng cao thì mức độ ưu tiên của quy trình càng thấp.
+
+**Lí do sử dụng**:
+- Cân bằng việc sử dụng tài nguyên giữa các tiến trình khác nhau.
+- Tự nguyện giảm mức độ ưu tiên của quy trình, để quan tâm đến những người dùng khác, đặc biệt là trên các hệ thống dùng chung.
+
+**Ví dụ**
+
+```python
+p.nice(10)  # set
+p.nice()  # get
+```
+<hr style="border: px solid;">
+
+**`ionice(ioclass=None, value=None)`**: Nhận hoặc thiết lập mức độ độc đáo I/O của quy trình (ưu tiên)
+
+
+**Tham số**
+- class: Xác định lớp ưu tiên (Idle, Best-effort, Real-time).
+- value: Giá trị phụ thuộc vào lớp ưu tiên, thường được sử dụng để tinh chỉnh mức độ ưu tiên trong cùng một lớp.
+
+**Cấp độ ưu tiên I/O**
+- `Idle`: Ưu tiên thấp nhất, thích hợp cho các tiến trình nền hoặc các tiến trình không quan trọng đến hiệu suất.
+- `Best-effort`: Ưu tiên trung bình, đây là mức ưu tiên mặc định cho hầu hết các tiến trình.
+- `Real-time`: Ưu tiên cao nhất, dành cho các tiến trình đòi hỏi thời gian đáp ứng thực sự nhanh, chẳng hạn như các tiến trình âm thanh hoặc video.
+
+**Ví dụ**
 
 ```python
 
 ```
 
+**``**:
 
+**Ví dụ**
+
+```python
+
+```
+
+**``**:
+
+**Ví dụ**
+
+```python
+
+```
+
+**``**:
+
+**Ví dụ**
+
+```python
+
+```
 
 
 

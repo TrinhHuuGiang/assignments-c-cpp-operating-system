@@ -14,10 +14,26 @@ try:
 except psutil.NoSuchProcess as e:
     print(f"Process with PID 12345 not found: {e}")
     
-# print(psutil.Process().environ())
+# Get the current Python process
 p = psutil.Process(psutil.Process().pid)
 
-# Get the executable path
-exe_path = p.exe()
-cmdline = p.cmdline()
-print(cmdline)
+# Get the user IDs
+uids = p.uids()
+
+print(f"Real UID: {uids.real}")
+print(f"Effective UID: {uids.effective}")
+print(f"Saved UID: {uids.saved}")
+
+terminal = p.terminal()
+
+if terminal:
+    print(f"Process is associated with terminal: {terminal}")
+else:
+    print("Process is not associated with a terminal.")
+    
+
+gids = p.gids()
+
+print(f"Real GID: {gids.real}")
+print(f"Effective GID: {gids.effective}")
+print(f"Saved GID: {gids.saved}")
