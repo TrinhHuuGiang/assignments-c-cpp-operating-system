@@ -14,4 +14,10 @@ try:
 except psutil.NoSuchProcess as e:
     print(f"Process with PID 12345 not found: {e}")
     
-print(psutil.Process().environ())
+# print(psutil.Process().environ())
+p = psutil.Process(psutil.Process().pid)
+
+# Get the executable path
+exe_path = p.exe()
+cmdline = p.cmdline()
+print(cmdline)

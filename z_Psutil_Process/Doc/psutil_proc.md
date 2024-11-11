@@ -194,6 +194,51 @@ with p.oneshot():
 ```
 
 
+**`exe()`**: trả về đường dẫn thực thi của một tiến trình. Xác định chương trình hoặc tập lệnh cụ thể mà một tiến trình đang chạy.
+- Khả năng tương thích đa nền tảng: Phương pháp này hoạt động trên các hệ điều hành khác nhau, cung cấp một cách nhất quán để truy xuất đường dẫn thực thi.path.
+- Công cụ có giá trị để giám sát hệ thống, phân tích quy trình và điều tra bảo mật.
+
+**Ví dụ**
+
+```python
+p = psutil.Process(psutil.Process().pid)
+
+# Get the executable path
+exe_path = p.exe()
+
+print(exe_path)
+```
+**`cmdline()`**: Giá trị trả về là danh sách các chuỗi, trong đó mỗi chuỗi đại diện cho một đối số dòng lệnh.
+
+**Ví dụ**
+
+```python
+# Get the current Python process
+p = psutil.Process(psutil.Process().pid)
+
+# Get the command-line arguments
+cmdline = p.cmdline()
+
+print(cmdline)
+# ['python3', 'Code/main.py']
+```
+**`environ()`**: trả về một từ điển chứa các biến môi trường của một tiến trình. Biến môi trường là cặp key-value cung cấp thông tin về môi trường thực thi của quy trình.
+
+**Đặc điểm**:
+- Các biến môi trường cụ thể có sẵn có thể khác nhau giữa các hệ điều hành khác nhau.
+- Các biến này có thể ảnh hưởng đến hành vi của một quy trình, chẳng hạn như thư mục làm việc, đường dẫn đến tệp thực thi và các cài đặt cấu hình khác.
+- Truy cập và sửa đổi các biến môi trường, vì nó có thể gây ra những hậu quả không lường trước được.
+
+**Ví dụ**
+```python
+# Get the current Python process
+p = psutil.Process(psutil.Process().pid)
+
+# Get the environment variables
+env_vars = p.environ()
+
+print(env_vars)
+```
 
 
 
@@ -204,6 +249,13 @@ with p.oneshot():
 
 
 
+**``**
+
+**Ví dụ**
+
+```python
+
+```
 
 
 <!-- -----------------------Template---------------------------------------------- -->
