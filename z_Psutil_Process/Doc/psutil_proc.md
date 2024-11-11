@@ -239,17 +239,80 @@ env_vars = p.environ()
 
 print(env_vars)
 ```
+**`create_time()`**: trả về thời gian tạo của một tiến trình. Nó cung cấp dấu thời gian khi quá trình được bắt đầu, được biểu thị dưới dạng số dấu phẩy động biểu thị số giây kể từ kỷ nguyên Unix (ngày 1 tháng 1 năm 1970, 00:00:00 UTC).
+
+**Ví dụ**
+
+```python
+# Get the current Python process
+p = psutil.Process(psutil.Process().pid)
+
+# Get the creation time
+create_time = p.create_time()
+
+# Convert the creation time to a human-readable format
+create_time_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(create_time))
+
+print(f"Process created at: {create_time_str}")
+```
+**`as_dict(attrs=None, ad_value=None)`**: Cung cấp một cách thuận tiện để truy xuất nhiều thuộc tính của một quy trình dưới dạng từ điển. 
+
+**Tham số**:
+- attrs: Danh sách tên thuộc tính tùy chọn để đưa vào từ điển. Nếu không được chỉ định, tất cả các thuộc tính có sẵn sẽ được bao gồm.
+- ad_value: A default value to use for attributes that cannot be retrieved due to access restrictions or other errors.
+
+**Ví dụ**
+
+```python
+# Get the current Python process
+p = psutil.Process(psutil.Process().pid)
+
+# Get a dictionary of process information, including PID, name, and CPU usage
+info = p.as_dict(attrs=['pid', 'name', 'cpu_percent'])
+
+print(info)
+```
+**`parent()`**: trả về một đối tượng đại diện cho tiến trình cha trực tiếp của tiến trình hiện tại.
+```python
+# Get the parent process
+parent_process = p.parent()
+
+if parent_process:
+    print(f"Parent process PID: {parent_process.pid}")
+    print(f"Parent process name: {parent_process.name()}")
+else:
+    print("This process is a top-level process.")
+```
+
+**`parents()`**: trả về một danh sách các đối tượng đại diện cho tất cả các tiến trình tổ tiên của tiến trình hiện tại, bắt đầu từ tiến trình cha trực tiếp và đi lên theo hệ thống phân cấp tiến trình.
+
+**Ví dụ**
+
+```python
+# Get the current Python process
+p = psutil.Process(psutil.Process().pid)
+
+# Get all ancestor processes
+ancestor_processes = p.parents()
+
+for ancestor in ancestor_processes:
+    print(f"Ancestor process PID: {ancestor.pid}")
+    print(f"Ancestor process name: {ancestor.name()}")
+```
+**`status`**: Trạng thái quá trình hiện tại dưới dạng một chuỗi. Chuỗi trả về là một trong các hằng số psutil.STATUS_*.
+
+**`cwd()`**: trả về thư mục làm việc hiện tại của một tiến trình. Đây là thư mục mà quy trình được khởi chạy hoặc thư mục mà quy trình sau đó đã thay đổi thành.
+
+```python
+
+```
 
 
 
 
 
 
-
-
-
-
-**``**
+**``**:
 
 **Ví dụ**
 
