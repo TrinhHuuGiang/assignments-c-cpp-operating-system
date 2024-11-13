@@ -14,7 +14,7 @@
 * Definitions
 ********************************************************************************/
 #include <iostream>
-#include <pthread.h>
+#include <pthread.h>   //(pthread_mutex_)   init,lock,unlock,destroy
 
 using namespace std;
 
@@ -26,7 +26,7 @@ typedef struct t_Share_Memory
 /********************************************************************************
 * Variables
 ********************************************************************************/
-pthread_mutex_t mutexkey;    // Khai báo một mutex
+pthread_mutex_t mutexkey;    // initialize a mutex key
 static smem s_cal_sum;           // struct to save shared value x,y,z,ready
 
 /********************************************************************************
