@@ -3,4 +3,4 @@
 #create folder build while not exist
 mkdir -p build
 
-g++ -o ./build/order order.cpp
+g++ -o ./build/mutex mutex_pthread.cpp
