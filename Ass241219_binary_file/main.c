@@ -94,7 +94,7 @@ int init_new_contact_book()
     FILE* f = NULL;
     f = fopen(FILE_LINK, "wb+"); //w+ mode is create new empty file, if file existed then renew it
     
-    // check fail open file
+    // check fail open file 
     if(f==NULL)
     {return -1;}
 
